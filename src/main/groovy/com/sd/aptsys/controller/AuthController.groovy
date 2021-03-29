@@ -2,6 +2,7 @@ package com.sd.aptsys.controller
 
 import com.sd.aptsys.entity.User
 import com.sd.aptsys.front.domain.LoginRequest
+import com.sd.aptsys.front.domain.SignupRequest
 import com.sd.aptsys.security.MyUserDetails
 import com.sd.aptsys.service.UserService
 import groovy.transform.CompileStatic
@@ -65,6 +66,21 @@ class AuthController {
         userService.save(user)
 
         return [userId: user.id, username: user.username, roles: user.roles, token: token]
+    }
+
+    @PostMapping('/signup')
+    def processSignup(@Valid @RequestBody SignupRequest signUpRequest) {
+        User user = userService.findByUsername(signUpRequest.username)
+        if (user) {
+            return [status: 'error', reason: 'user_exists']
+        }
+        User toSave = new User()
+        toSave.firstName = signUpRequest.firstname
+        toSave.lastName = signUpRequest.lastname
+        toSave.username = signUpRequest.username
+        toSave.hashedPassword = passwordEncoder.encode(signUpRequest.password)
+        toSave = userService.save(toSave)
+        return [status: 'success', user: toSave]
     }
 
 }
