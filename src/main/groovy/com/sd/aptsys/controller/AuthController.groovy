@@ -65,7 +65,13 @@ class AuthController {
         user.lastestToken = token
         userService.save(user)
 
-        return [userId: user.id, username: user.username, roles: user.roles, token: token]
+        return [status: 'success', userId: user.id, username: user.username, roles: user.roles, token: token]
+    }
+
+    @PostMapping('/isAuthenticated')
+    def isAuthenticatedCheck(@RequestBody Map<String, String> data) {
+        println "Hello"
+        return [status: true, isAuthValid: false]
     }
 
     @PostMapping('/signup')

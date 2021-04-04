@@ -74,7 +74,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers('**/api/**').authenticated()
-                .antMatchers('/auth/login', '/auth/signup', '/h2-console/**').permitAll()
+                .antMatchers('/auth/login', '/auth/signup', '/auth/isAuthenticated', '/h2-console/**').permitAll()
                 .anyRequest().authenticated()
 
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler)
