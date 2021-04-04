@@ -3,9 +3,11 @@ package com.sd.aptsys.controller
 import com.sd.aptsys.entity.User
 import com.sd.aptsys.front.domain.LoginRequest
 import com.sd.aptsys.front.domain.SignupRequest
+import com.sd.aptsys.security.AuthenticationToken
 import com.sd.aptsys.security.MyUserDetails
 import com.sd.aptsys.service.UserService
 import groovy.transform.CompileStatic
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -24,10 +26,12 @@ class AuthController {
 
     private final UserService userService
     private final PasswordEncoder passwordEncoder
+    private final AuthenticationManager authenticationManager
 
-    AuthController(final UserService userService, final PasswordEncoder passwordEncoder) {
+    AuthController(final UserService userService, final PasswordEncoder passwordEncoder, final AuthenticationManager authenticationManager) {
         this.userService = userService
         this.passwordEncoder = passwordEncoder
+        this.authenticationManager = authenticationManager
     }
 
 
@@ -70,8 +74,12 @@ class AuthController {
 
     @PostMapping('/isAuthenticated')
     def isAuthenticatedCheck(@RequestBody Map<String, String> data) {
-        println "Hello"
-        return [status: true, isAuthValid: false]
+        /**
+         * Auth valid is checked by trying to attempt the authenticated token with spring and get the principle
+         * is princle is myuserdetail then it is valid user not otherwise
+         */
+        boolean isAuthValid = authenticationManager.authenticate(new AuthenticationToken(data.token)).principal instanceof MyUserDetails
+        return [status: true, isAuthValid: isAuthValid]
     }
 
     @PostMapping('/signup')
