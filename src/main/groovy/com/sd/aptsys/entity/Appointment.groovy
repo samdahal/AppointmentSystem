@@ -20,7 +20,7 @@ class Appointment {
     @RequiredField( message = 'Start date is required')
     Date start
 
-    @RequiredField(message = 'End date is required')
+   // @RequiredField(message = 'End date is required')
     Date end
 
     @RequiredField(message = 'Title is required')
@@ -29,6 +29,8 @@ class Appointment {
     @ManyToOne
     @JoinColumn(name = 'user_id')
     User user
+
+    boolean active = true
 
     Date createDate = new GregorianCalendar().time
     Date updateDate = new GregorianCalendar().time

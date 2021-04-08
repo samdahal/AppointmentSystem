@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 import javax.validation.Valid
+import java.security.Principal
 
 @CompileStatic
 @RestController
@@ -72,15 +73,6 @@ class AuthController {
         return [status: 'success', userId: user.id, username: user.username, roles: user.roles, token: token]
     }
 
-    @PostMapping('/isAuthenticated')
-    def isAuthenticatedCheck(@RequestBody Map<String, String> data) {
-        /**
-         * Auth valid is checked by trying to attempt the authenticated token with spring and get the principle
-         * is princle is myuserdetail then it is valid user not otherwise
-         */
-        boolean isAuthValid = authenticationManager.authenticate(new AuthenticationToken(data.token)).principal instanceof MyUserDetails
-        return [status: true, isAuthValid: isAuthValid]
-    }
 
     @PostMapping('/signup')
     def processSignup(@Valid @RequestBody SignupRequest signUpRequest) {

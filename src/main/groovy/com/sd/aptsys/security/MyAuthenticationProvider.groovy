@@ -26,7 +26,9 @@ class MyAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider
         AuthenticationToken authenticationToken = usernamePasswordAuthenticationToken as AuthenticationToken
         log.info("attempting to authenticate user with token --> ${authenticationToken.token}")
         assert userService != null
-
+        if (!authenticationToken.token) {
+            return new MyUserDetails(-1L, null, null, [])
+        }
         return MyUserDetails.fromToken(authenticationToken.token, userService.findByLatestToken(authenticationToken.token))
     }
 }

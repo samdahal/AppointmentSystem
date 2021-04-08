@@ -3,6 +3,7 @@ package com.sd.aptsys.controller
 import com.sd.aptsys.entity.Appointment
 import com.sd.aptsys.service.AppointmentService
 import groovy.transform.CompileStatic
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -21,6 +22,7 @@ class AppointmentController {
 
     final AppointmentService appointmentService
 
+    @Autowired
     AppointmentController(AppointmentService appointmentService) {
         this.appointmentService = appointmentService
     }
@@ -30,9 +32,22 @@ class AppointmentController {
         return appointmentService.findAll()
     }
 
+    @GetMapping("/appointment/mine")
+    def findMyAppointments() {
+        return appointmentService.findMyAppointments()
+    }
+
     @GetMapping("/appointment/{id}")
     def findAppointmentById(@PathVariable('id') Long id) {
         return appointmentService.findById(id)
+    }
+
+    @GetMapping("/appointment/cancel/{id}")
+    def cancelAppointment(@PathVariable('id') Long id) {
+        Appointment appointment = appointmentService.findById(id)
+        appointment.active = false
+        appointment = appointmentService.save(appointment)
+        return  appointment
     }
 
     @PutMapping("/appointment/update")

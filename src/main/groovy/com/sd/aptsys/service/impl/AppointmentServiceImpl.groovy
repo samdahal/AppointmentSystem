@@ -5,6 +5,7 @@ import com.sd.aptsys.repository.AppointmentRepository
 import com.sd.aptsys.service.AppointmentService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 
 @Service
@@ -45,4 +46,9 @@ class AppointmentServiceImpl implements AppointmentService {
         return appointment.present ? appointment.get() : null
     }
 
+    @Override
+    List<Appointment> findMyAppointments() {
+        String name = SecurityContextHolder.context.authentication.name
+        appointmentRepository.findByUserUsername(name)
+    }
 }

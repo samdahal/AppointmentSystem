@@ -39,6 +39,7 @@ class MyUserDetails implements UserDetails {
 
 
     static MyUserDetails fromToken(String token, User user) {
+        if (token == null) {return null}
         Claims claims = getAllClaimsFromToken(token)
         MyUserDetails myUserDetails = new MyUserDetails()
 
